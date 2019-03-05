@@ -28,7 +28,7 @@ def register(request):
                     messages.error(request, 'That email is taken')
                     return redirect('register')
                 else:
-                    # Success
+                    # Registeration success
                     user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
                     user.save()
                     messages.success(request, 'You are now registered and can login')
@@ -39,8 +39,21 @@ def register(request):
 
 def login(request):
     if request.method == 'POST':
-        # Login User
-        return
+        # Get from values
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = auth.authenticate(username=username, password=password)
+        # Check credentials
+        if user is None:
+            messages.error(request, 'Invalid credentials')
+            return redirect('login')
+        else:
+            # Login success
+            auth.login(request, user)
+            messages.success(request, 'You are now logged in')
+            return redirect('dashboard')
+            
     else:
         return render(request, 'accounts/login.html')
 
