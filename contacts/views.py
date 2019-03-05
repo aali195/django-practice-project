@@ -25,5 +25,8 @@ def contact(request):
         contact = Contact(listing=listing, listing_id=listing_id, name=name, email=email, phone=phone, message=message, user_id=user_id)
 
         contact.save()
+
+        # Not implemented email sending
+        
         messages.success(request, 'Your request has been submitted, a realtor will get back to you')
         return redirect('/listings/'+listing_id)
