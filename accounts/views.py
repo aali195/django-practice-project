@@ -1,11 +1,39 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.contrib import messages, auth
+
+from django.contrib.auth.models import User
 
 def register(request):
     if request.method == 'POST':
-        # Register User
-        messages.error(request, 'Testing error message')
-        return redirect('register')
+        # Get from values
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        # Check if passwords match
+        if password != password2:
+            messages.error(request, 'Passwords do not much')
+            return redirect('register')
+        else:
+            # Check user name
+            if User.objects.filter(username=username).exists():
+                messages.error(request, 'That username is taken')
+                return redirect('register')
+            else:
+                # Check email
+                if User.objects.filter(email=email).exists():
+                    messages.error(request, 'That email is taken')
+                    return redirect('register')
+                else:
+                    # Success
+                    user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+                    user.save()
+                    messages.success(request, 'You are now registered and can login')
+                    return redirect('login')
+
     else:
         return render(request, 'accounts/register.html')
 
