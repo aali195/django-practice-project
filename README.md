@@ -1,3 +1,4 @@
+Placehholder
 # django-practice-project
 A real estate themed practice project created to help me get used to the Django framework.
 
